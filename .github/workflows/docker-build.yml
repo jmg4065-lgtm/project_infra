@@ -21,6 +21,7 @@ jobs:
 
       - name: Build Docker image
         run: |
+          cd project_infra
           docker build -t deokjeon/project_infra:latest .
 
       - name: Push Docker image
