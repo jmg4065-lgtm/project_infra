@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: web-svc
-  namespace: project-infra
+  namespace: project_infra
 spec:
   type: NodePort
   selector:
