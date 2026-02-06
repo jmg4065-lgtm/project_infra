@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web
-  namespace: project-infra
+  namespace: project_infra
 spec:
   replicas: 1
   selector:
