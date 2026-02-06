@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web
-  namespace: project_infra
+  namespace: project-infra
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: deokjeon/project_infra:latest
+          image: deokjeon/project-infra:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
