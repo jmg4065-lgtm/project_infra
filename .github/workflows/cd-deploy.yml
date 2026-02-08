@@ -22,7 +22,7 @@ jobs:
 
             export KUBECONFIG=/home/ubuntu/.kube/config
             export NS=project-infra
-            export IMG=deokjeon/project_infra:${GITHUB_SHA}
+            export IMG=deokjeon/project_infra:${{ github.sha }}
 
             echo "== Sync repo =="
             cd ~/project_infra
