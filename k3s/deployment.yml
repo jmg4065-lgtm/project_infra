@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: web
-          image: deokjeon/project-infra:latest
-          imagePullPolicy: Always
+          image: deokjeon/project_infra:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
           readinessProbe:
