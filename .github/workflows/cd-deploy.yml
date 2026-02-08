@@ -1,12 +1,13 @@
-name: CD Deploy to EC2 (k3s)
+name: deploy
 
 on:
   push:
-      branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -14,19 +15,31 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
+          port: ${{ secrets.EC2_PORT }}
+          script_stop: true
           script: |
             set -e
-            export KUBECONFIG=/home/ubuntu/.kube/config
 
+            export KUBECONFIG=/home/ubuntu/.kube/config
+            export NS=project-infra
+            export IMG=deokjeon/project_infra:${GITHUB_SHA}
+
+            echo "== Sync repo =="
             cd ~/project_infra
             git fetch origin
             git reset --hard origin/main
-          
+
+            echo "== Apply manifests =="
             kubectl apply -f k3s/namespace.yml
             kubectl apply -f k3s/deployment.yml
             kubectl apply -f k3s/service.yml
-          
-            kubectl -n project-infra rollout status deploy/web --timeout=120s
-            kubectl -n project-infra get pods
-            kubectl -n project-infra get svc
+
+            echo "== Update image to immutable tag (SHA) =="
+            kubectl -n ${NS} set image deployment/web web=${IMG}
+
+            echo "== Rollout status =="
+            kubectl -n ${NS} rollout status deployment/web --timeout=300s
+
+            echo "== Current status =="
+            kubectl -n ${NS} get pods -o wide
+            kubectl -n ${NS} get svc
