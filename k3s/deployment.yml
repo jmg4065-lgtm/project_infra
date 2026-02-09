@@ -1,21 +1,58 @@
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: web
+#  namespace: project-infra
+#spec:
+#  replicas: 1
+#
+#  strategy:
+#    type: RollingUpdate
+#    rollingUpdate:
+#      maxUnavailable: 1
+#      maxSurge: 0
+
+# selector:
+#    matchLabels:
+#      app: web
+
+# template:
+#    metadata:
+#      labels:
+#        app: web
+#    spec:
+#      containers:
+#        - name: web
+#          image: deokjeon/project_infra:latest
+#          imagePullPolicy: IfNotPresent
+#          ports:
+#            - containerPort: 80
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: 80
+#            initialDelaySeconds: 5
+#            periodSeconds: 5
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: 80
+#            initialDelaySeconds: 10
+#            periodSeconds: 10
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web
   namespace: project-infra
+  labels:
+    app: web
 spec:
   replicas: 1
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 0
-
   selector:
     matchLabels:
       app: web
-
   template:
     metadata:
       labels:
@@ -24,18 +61,6 @@ spec:
       containers:
         - name: web
           image: deokjeon/project_infra:latest
-          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 10
-            periodSeconds: 10
+          # DB는 아직 안 붙이니까 env 주입은 다음 단계에서 추가
